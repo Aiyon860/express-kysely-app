@@ -310,7 +310,3 @@ These are defined in `src/types.ts` and used throughout the codebase for type-sa
 | `npm run migrate:down` | Rollback last migration                            |
 | `npm run migrate:fresh` | Drop all tables + re-migrate                      |
 | `npm test`           | Run integration tests with Jest                      |
-
-## License
-
-ISC
