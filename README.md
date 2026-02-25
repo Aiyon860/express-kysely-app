@@ -12,17 +12,50 @@ A simple inventory management REST API built with **Express 5**, **Kysely** (typ
 - **Testing:** Jest + Supertest
 - **Environment:** dotenv
 
+## Architecture
+
+This project follows the **Handler-Service-Repository** pattern to maintain a clean separation of concerns:
+
+| Layer          | Responsibility                                           | Location             |
+| -------------- | -------------------------------------------------------- | -------------------- |
+| **Routes**     | Map URL paths to handler functions                       | `src/routes/`        |
+| **Handlers**   | Parse HTTP requests, call services, send HTTP responses  | `src/handlers/`      |
+| **Services**   | Business logic, validation, and orchestration            | `src/services/`      |
+| **Repositories** | Data access layer — raw database queries via Kysely    | `src/repositories/`  |
+
+```
+Request → Route → Handler → Service → Repository → Database
+```
+
 ## Project Structure
 
 ```
 express-kysely-app/
 ├── src/
+│   ├── handlers/
+│   │   ├── category.handler.ts          # HTTP layer for categories
+│   │   ├── item.handler.ts              # HTTP layer for items
+│   │   └── transaction.handler.ts       # HTTP layer for transactions
+│   ├── services/
+│   │   ├── category.service.ts          # Business logic for categories
+│   │   ├── item.service.ts              # Business logic for items
+│   │   └── transaction.service.ts       # Business logic for stock transactions
+│   ├── repositories/
+│   │   ├── category.repository.ts       # Database queries for categories
+│   │   ├── item.repository.ts           # Database queries for items
+│   │   └── transaction.repository.ts    # Database queries for transactions
+│   ├── routes/
+│   │   ├── index.ts                     # Aggregates and mounts all routes
+│   │   ├── category.routes.ts           # Category route definitions
+│   │   ├── item.routes.ts               # Item route definitions
+│   │   └── transaction.routes.ts        # Transaction route definitions
 │   ├── migrations/
 │   │   └── 20260225_initial_schema.ts   # Database schema migration
+│   ├── app.ts                           # Express app setup and middleware
 │   ├── config.ts                        # Centralized config (reads .env)
 │   ├── database.ts                      # Kysely database instance
 │   ├── migrate.ts                       # Migration CLI (up/down/fresh)
-│   ├── server.ts                        # Express app and routes
+│   ├── server.ts                        # Entry point — starts the server
 │   └── types.ts                         # Database types and interfaces
 ├── tests/
 │   └── inventory.test.ts                # Integration tests
